@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoleChudes", "PoleChudes\PoleChudes.csproj", "{13F94EE1-B13A-4416-A88E-FDF6DA72E7F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoleChudesServer", "PoleChudesServer\PoleChudesServer.csproj", "{BE9A66EF-3A86-4003-B48D-F4E06386EF37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13F94EE1-B13A-4416-A88E-FDF6DA72E7F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F94EE1-B13A-4416-A88E-FDF6DA72E7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F94EE1-B13A-4416-A88E-FDF6DA72E7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F94EE1-B13A-4416-A88E-FDF6DA72E7F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE9A66EF-3A86-4003-B48D-F4E06386EF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE9A66EF-3A86-4003-B48D-F4E06386EF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE9A66EF-3A86-4003-B48D-F4E06386EF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE9A66EF-3A86-4003-B48D-F4E06386EF37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A587FCFA-FD30-4178-85D7-EEC77447724E}
+	EndGlobalSection
+EndGlobal
