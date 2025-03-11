@@ -3,6 +3,7 @@ using PoleChudesServer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<Rooms>();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR().
     AddJsonProtocol(s =>

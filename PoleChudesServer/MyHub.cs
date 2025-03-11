@@ -9,13 +9,7 @@ namespace PoleChudesServer
         public MyHub(Rooms rooms)
         {
            this.rooms = rooms;
-            rooms.SetStart(async (p1, p2, p3, p4, id) => {
-                await clientsByNickname[p1].SendAsync("opponent", rooms.players, id);
-                await clientsByNickname[p2].SendAsync("opponent", rooms.players, id);
-                await clientsByNickname[p3].SendAsync("opponent", rooms.players, id);
-                await clientsByNickname[p4].SendAsync("opponent", rooms.players, id);
-                //await clientsByNickname[p1].SendAsync("maketurn", "x");
-            });
+            rooms.SetHub(this);
         }
         public override Task OnConnectedAsync()
         {
@@ -27,7 +21,11 @@ namespace PoleChudesServer
             Console.WriteLine("Новенький");
             return base.OnConnectedAsync();
         }
-
+        public void MakeTurn(string nickName, string letter)
+        {
+            rooms.CheckTurn(nickName, letter);
+        }
+         
         public void Nickname(string nickname)
         {
             var check = clientsByNickname.Keys.FirstOrDefault(s => s == nickname);

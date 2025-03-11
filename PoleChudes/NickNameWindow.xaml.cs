@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +24,11 @@ namespace PoleChudes
 
         public string NickName { get; set; }
 
-        public NickNameWindow(Microsoft.AspNetCore.SignalR.Client.HubConnection _connection)
+        public NickNameWindow(HubConnection Connection)
         {
             InitializeComponent();
             DataContext = this;
-            connection = _connection;
+            connection = Connection;
         }
 
         private async void Send(object sender, RoutedEventArgs e)
