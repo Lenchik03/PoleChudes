@@ -19,7 +19,7 @@ namespace PoleChudes
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
+        public string Address { get; set; } = "http://localhost:5010";
         public List<WordChar> Word { get; set; }
         public string Variant { get; set; }
 
@@ -57,6 +57,11 @@ namespace PoleChudes
                     });
                 }
             }
+        }
+
+        private void SetAddress(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

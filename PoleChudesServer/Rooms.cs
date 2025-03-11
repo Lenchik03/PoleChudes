@@ -5,7 +5,8 @@ namespace PoleChudesServer
     public class Rooms
     {
         string last = string.Empty;
-        List<string> players = new(); 
+        public List<string> players = new();
+        public List<WordChar> letters = new();
 
         internal void AddNewClient(string nickname)
         {
@@ -32,21 +33,30 @@ namespace PoleChudesServer
         {
             string vopros = "колонка для одного";
             string word = "наушники";
-            List<WordChar> letters = word.Select(x => new WordChar { Char = x.ToString()}).ToList();
-            var game = new Game { ID = Guid.NewGuid().ToString(), P1 = p1, P2 = p2, P3 = p3, P4 = p4, Turn = p1 };
+            letters = word.Select(x => new WordChar { Char = x.ToString()}).ToList();
+            var game = new Game { ID = Guid.NewGuid().ToString(), P1 = p1, P2 = p2, P3 = p3, P4 = p4 };
             myHub.Clients.All.SendAsync("start", game, word, letters);
+            MyHub.clientsByNickname[players[0]].SendAsync("Буква ...");
+
             games.Add(game.ID, game);
             proc(p1, p2, p3, p4, game.ID);
         }
 
+        int index = 0;
         internal string GetNextPlayer(Turn turn)
         {
+            string result = string.Empty;
+            string letter = letters.FirstOrDefault(s => s.Char == turn.Letter).ToString();
 
+            if (letter != null)
+                result = players[index];
+            else
+            {
+                result = players[index++];
+            }
+            
             return null;
         }
-
-
-
 
         internal void ClearGame(string gameId)
         {
