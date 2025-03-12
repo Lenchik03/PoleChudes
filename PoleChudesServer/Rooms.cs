@@ -29,7 +29,7 @@ namespace PoleChudesServer
         private void StartNewGame(string p1, string p2, string p3, string p4)
         {
             string vopros = "колонка для одного";
-            string word = "наушники";
+            string word = "НАУШНИКИ";
             letters = word.Select(x => new WordChar { Char = x.ToString()}).ToList();
             var game = new Game { ID = Guid.NewGuid().ToString(), P1 = p1, P2 = p2, P3 = p3, P4 = p4 };
             games.Add(game.ID, game);
@@ -37,7 +37,6 @@ namespace PoleChudesServer
             myHub.Clients.All.SendAsync("opponent", players, game.ID);
             myHub.Clients.All.SendAsync("start", game.ID, vopros, letters);
             MyHub.clientsByNickname[players[0]].SendAsync("maketurn", "Буква ...");
-
         }
 
         int index = 0;
@@ -48,23 +47,52 @@ namespace PoleChudesServer
             games.Remove(gameId);
         }
 
+        int correctLetters = 0;
         internal void CheckTurn(string nickName, string letter)
         {
             string result = string.Empty;
-            var letter1 = letters.FirstOrDefault(s => s.Char == letter);
-
-            if (letter1 != null)
+            int count = 0;
+            //var letter1 = letters.FirstOrDefault(s => s.Char == letter);
+            if (letter.Length > 1)
             {
-                letter1.Opened = true;
-                result = players[index];
-                myHub.Clients.All.SendAsync("update", letters);
+                bool fullword = string.Join("", letters.Select(s => s.Char)).ToLower() == letter.ToLower();
+                if (fullword)
+                {
+                    letters.ForEach(s => s.Opened = true);
+                    myHub.Clients.All.SendAsync("update", letters);
+                    myHub.Clients.All.SendAsync("winner", players[index]);
+                    return;
+                }
             }
             else
             {
-                result = players[index++];
+                foreach (var let in letters)
+                {
+                    if (letter == let.Char)
+                    {
+                        count++;
+                        correctLetters++;
+                        let.Opened = true;
+                        result = players[index];
+                        myHub.Clients.All.SendAsync("update", letters);
+                    }
+
+                }
             }
-            MyHub.clientsByNickname[result].SendAsync("maketurn", letter);
             
+
+            if (count == 0)
+            {
+                myHub.Clients.All.SendAsync("loser", letter);
+                ++index;
+                if (index > 3)
+                    index = 0;
+                result = players[index];
+            }
+            MyHub.clientsByNickname[result].SendAsync("maketurn", "Буква ...");
+            
+            if (correctLetters == letters.Count)
+                myHub.Clients.All.SendAsync("winner", players[index]);
         }
     }
 }

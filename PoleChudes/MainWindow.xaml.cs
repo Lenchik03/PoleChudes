@@ -125,18 +125,26 @@ namespace PoleChudes
                 MyTurn = true;
             });
 
-        }
-
-        private void SayChar(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(Variant) || Variant.Length > 1)
-                return;
-            string test = Variant.ToUpper();
-            _connection.SendAsync("MakeTurn", nickName, test);
             _connection.On<List<WordChar>>("update", letters =>
             {
                 Word = letters;
             });
+            _connection.On<string>("winner", player =>
+            {
+                MyTurn = false;
+                MessageBox.Show($"Победил игрок - {player}");
+               
+            });
+        }
+
+        private void SayChar(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(Variant))
+                return;
+            string test = Variant.ToUpper();
+            MyTurn = false;
+            _connection.SendAsync("MakeTurn", nickName, test);
+           
 
             //foreach (var wordChar in Word)
             //{
