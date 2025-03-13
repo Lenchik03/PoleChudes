@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace PoleChudes
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private MediaPlayer mediaPlayer = new MediaPlayer();
         HubConnection _connection;
         private List<string> opponents;
         public List<string> Opponents
@@ -43,7 +45,13 @@ namespace PoleChudes
                 Signal();
             }
         }
-        public string Letter { get; set; }
+        public string Message
+        {
+            get => message;
+            set { message = value;
+                Signal();
+            }
+        }
         public string Question { 
             get => question;
             set { question = value; 
@@ -71,6 +79,8 @@ namespace PoleChudes
             }
             
         }
+        string musicFilePath = "";
+        private string message;
 
         public string Variant { get; set; }
 
@@ -90,9 +100,33 @@ namespace PoleChudes
             //};
         }
 
+
         public event PropertyChangedEventHandler? PropertyChanged;
         void Signal([CallerMemberName] string prop = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
+        private void PlayMusic(string musicFilePath)
+        {
+            try
+            {
+                //if(!string.IsNullOrEmpty(musicFilePath))
+                //{
+                //    mediaPlayer.Stop();
+                //    Task task = new Task();
+
+                //}
+                Dispatcher.Invoke(() =>
+                {
+                    mediaPlayer.Open(new Uri(musicFilePath, UriKind.Relative));
+                    mediaPlayer.Play();
+                });
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке музыки: {ex.Message}");
+            }
+        }
 
         private void HubMethods()
         {
@@ -117,24 +151,40 @@ namespace PoleChudes
                 gameid = id;
                 Question = vopros;
                 Word = letters;
+               
             });
 
             _connection.On<string>("maketurn", letter =>
             {
-                Letter = letter;
                 MyTurn = true;
+                musicFilePath = "music/baraban.mp3";
+                PlayMusic(musicFilePath);
+                Message = letter;
             });
 
-            _connection.On<List<WordChar>>("update", letters =>
+            _connection.On<List<WordChar>, string, string>("update", (letters, player, letter) =>
             {
                 Word = letters;
+                musicFilePath = "music/bukvap.mp3";
+                PlayMusic(musicFilePath);
+                Message = $"Игрок {player} отгадал {letter}";
             });
             _connection.On<string>("winner", player =>
             {
                 MyTurn = false;
-                MessageBox.Show($"Победил игрок - {player}");
-               
+                musicFilePath = "music/winner.mp3";
+                PlayMusic(musicFilePath);
+                Message = $"Победил игрок - {player}";
+
+
             });
+            _connection.On<string, string>("loser", (wrong, loser) =>
+            {
+                musicFilePath = "music/bukvan.mp3";
+                PlayMusic(musicFilePath);
+                Message = $"Игрок {loser} сказал {wrong} и оказался не прав";
+            });
+
         }
 
         private void SayChar(object sender, RoutedEventArgs e)

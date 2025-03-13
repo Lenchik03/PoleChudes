@@ -52,6 +52,7 @@ namespace PoleChudesServer
         {
             string result = string.Empty;
             int count = 0;
+            
             //var letter1 = letters.FirstOrDefault(s => s.Char == letter);
             if (letter.Length > 1)
             {
@@ -59,7 +60,7 @@ namespace PoleChudesServer
                 if (fullword)
                 {
                     letters.ForEach(s => s.Opened = true);
-                    myHub.Clients.All.SendAsync("update", letters);
+                    myHub.Clients.All.SendAsync("update", letters, players[index], letter);
                     myHub.Clients.All.SendAsync("winner", players[index]);
                     return;
                 }
@@ -68,13 +69,13 @@ namespace PoleChudesServer
             {
                 foreach (var let in letters)
                 {
-                    if (letter == let.Char)
+                    if (letter == let.Char && !let.Opened)
                     {
                         count++;
                         correctLetters++;
                         let.Opened = true;
                         result = players[index];
-                        myHub.Clients.All.SendAsync("update", letters);
+                        myHub.Clients.All.SendAsync("update", letters, players[index], letter);
                     }
 
                 }
@@ -83,7 +84,7 @@ namespace PoleChudesServer
 
             if (count == 0)
             {
-                myHub.Clients.All.SendAsync("loser", letter);
+                myHub.Clients.All.SendAsync("loser", letter, players[index]);
                 ++index;
                 if (index > 3)
                     index = 0;

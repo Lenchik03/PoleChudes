@@ -35,7 +35,12 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Content="{Binding Question}"/>
+            <StackPanel>
+                <Label Content="{Binding NickName}"/>
+                <Label Content="{Binding Message}"/>
+            </StackPanel>
+            
+            <Label Content="{Binding Question}" HorizontalAlignment="Center" FontSize="30"/>
             <ListBox Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{Binding Word}" >
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
